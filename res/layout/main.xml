@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout_header"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical" 
+        android:layout_weight="1">
+
+       <FrameLayout
+	        android:id="@+id/frameLayout_footer"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:background="@drawable/title" >
+	        
+	    
+
+	        <RelativeLayout
+	            android:id="@+id/relativeLayout1"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent" >
+	        <ImageButton
+	            android:id="@+id/backButton"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/backs" 
+	            android:layout_alignParentRight="true"
+	            android:background="#00000000"
+	           />
+	       	</RelativeLayout>
+	        
+       	</FrameLayout>
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:id="@+id/linearLayout_content"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical" 
+        android:layout_weight="10">
+
+	    <FrameLayout
+	        android:id="@+id/frameLayout1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" >
+	        
+	        <WebView
+	            android:id="@+id/HomeWebView"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:scrollbarSize="0dip"  />
+	
+	        <WebView
+	            android:id="@+id/ChildWebView"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:scrollbarSize="0dip"  />
+	
+	        <WebView
+	            android:id="@+id/GirlWebView"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	             android:scrollbarSize="0dip" />
+	        
+	        <WebView
+	            android:id="@+id/InfoWebView"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent" />
+
+	        <RelativeLayout
+	            android:id="@+id/relativeLayout1"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent" >
+
+	            <ProgressBar
+	                android:id="@+id/loader"
+	                style="?android:attr/progressBarStyleLarge"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_centerInParent="true" />
+	        </RelativeLayout>
+	
+	    </FrameLayout>
+	 </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_footer"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:background="@drawable/footer"  >
+
+        <FrameLayout
+	        android:id="@+id/frameLayout_footer"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" >
+
+         <LinearLayout
+             android:id="@+id/relativeLayout_footer"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent" >
+
+             <RelativeLayout
+                 android:id="@+id/relativeLayout1"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:paddingTop="6dp" >
+
+                  <ImageButton
+                     android:id="@+id/HomeButton"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="6dp"
+                     android:background="@drawable/homes" />
+                  
+                 <ImageButton
+                     android:id="@+id/childViewButton"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_toRightOf="@+id/HomeButton"
+                     android:layout_marginLeft="8dp"
+                     android:background="@drawable/charts" />
+
+                 <ImageButton
+                     android:id="@+id/girlViewButton"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="4dp"
+                     android:layout_toRightOf="@+id/childViewButton"
+                     android:background="@drawable/users" />
+
+                
+             </RelativeLayout>
+
+         </LinearLayout>
+
+       	</FrameLayout>
+   </LinearLayout>
+</LinearLayout>

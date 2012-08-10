@@ -1,0 +1,20 @@
+
+
+<html>
+<head>
+	<style type="text/css">
+		#left_box , #right_box {
+
+	float: left;
+}
+	</style>
+</head>
+<body>
+<div id="left_box">
+	2312312
+</div>
+	<div id="right_box">
+		-----12312312
+	</div>
+</body>
+</html>

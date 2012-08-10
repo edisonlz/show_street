@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>创意网尚-阿拉萌</title>
+<script src="./js/jq.mobi.min.js"></script>
+<script type="text/javascript" src="jq.css3animate.js"></script> 
+<script type="text/javascript" src="./src/iscroll.js"></script>
+<script type="text/javascript" src="md5.js"></script>
+
+<script type="text/javascript">
+var secret = "5e4f519cdf37310dc5295d82c5311630";
+var base_url = "http://gw.api.taobao.com/router/rest?";
+
+var post_template = '<div class="poster" style="position:relative; "> \
+									<div class="header_title {{top_class}}">{{title}} </div> \
+									<div class=".div_img"><img src= "{{cover_pic_url}}" width="100%" onclick="javascript:load_info({{id}});" height="{{image_height}}" /></div> \
+										<div class="down_round"> \
+												<a class="favaImg"></a>\
+												<a class="favCount">{{hits}}</a>\
+										</div>\
+									</div>';
+
+var url = location.search; 
+var Request = new Object(); 
+if(url.indexOf("?")!=-1) {
+	var str = url.substr(1); 
+	strs = str.split("&"); 
+	for(var i=0;i<strs.length;i++) { 
+		Request[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]); 
+	} ;
+};
+
+function timestamp() {
+	   var d = new Date();
+	   
+	   return d.format("yyyy-MM-dd hh:mm:ss");
+	}
+
+
+	function sortObject(o) {
+		    var sorted = {},
+		    key, a = [];
+
+		    for (key in o) {
+		        if (o.hasOwnProperty(key)) {
+		                a.push(key);
+		        }
+		    }
+
+		    a.sort();
+
+		    for (key = 0; key < a.length; key++) {
+		        sorted[a[key]] = o[a[key]];
+		    }
+		    return sorted;
+	}
+
+	function to_query(dic){
+
+		var s = new Array();
+		for(var k in dic){
+			s.push(k+"="+dic[k]);
+		}
+		return s.join("&");
+	}
+
+	function to_secret(dic){
+		var s = "";
+		for(var k in dic){
+			s+= k + dic[k];
+		}
+		return secret+s+secret;
+	}
+
+
+	Date.prototype.format = function(format)   
+	   {   
+	      var o = {
+	        "M+" : this.getMonth()+1, //month   
+	        "d+" : this.getDate(),    //day   
+	        "h+" : this.getHours(),   //hour   
+	        "m+" : this.getMinutes(), //minute   
+	        "s+" : this.getSeconds(), //second   
+	        "q+" : Math.floor((this.getMonth()+3)/3), //quarter   
+	        "S" : this.getMilliseconds() //millisecond   
+	      }   
+	      if(/(y+)/.test(format)) format=format.replace(RegExp.$1,   
+	        (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+	      for(var k in o)if(new RegExp("("+ k +")").test(format))   
+	        format = format.replace(RegExp.$1,   
+	          RegExp.$1.length==1 ? o[k] :    
+	            ("00"+ o[k]).substr((""+ o[k]).length));   
+	      return format;   
+	 }
+
+	function replace_all(value,AFindText,ARepText){ 
+		var raRegExp = new RegExp(AFindText,"ig"); 
+		return value.replace(raRegExp,ARepText); 
+	}
+	
+	function templ(template,dic){
+		var t = template;
+		for(var k in dic){
+			t = replace_all(t,"{{"+k+"}}",dic[k]);
+		}
+		return t;
+	}
+
+	function getbox(){
+		
+		var winW = 630, winH = 460;
+		if (document.body && document.body.offsetWidth) {
+			 winW = document.body.offsetWidth;
+			 winH = document.body.offsetHeight;
+		}
+		
+		if (document.compatMode=='CSS1Compat' &&
+		    document.documentElement &&
+		    document.documentElement.offsetWidth ) {
+		 winW = document.documentElement.offsetWidth;
+		 winH = document.documentElement.offsetHeight;
+		}
+		
+		if (window.innerWidth && window.innerHeight) {
+			 winW = window.innerWidth;
+			 winH = window.innerHeight;
+		}
+		return winW;
+	}
+
+</script>
+
+
+	
+<script type="text/javascript">
+var myScroll;
+
+function loaded() {
+	myScroll = new iScroll('wrapper', {
+		snap: true,
+		momentum: false,
+		hScrollbar: false,
+		onScrollEnd: function () {
+			document.querySelector('#indicator > li.active').className = '';
+			document.querySelector('#indicator > li:nth-child(' + (this.currPageX+1) + ')').className = 'active';
+		}
+	 });
+}
+
+document.addEventListener('DOMContentLoaded', loaded, false);
+</script>
+
+<script type="text/javascript">
+
+
+	$(document).ready(function(){
+			load_pic();
+	});
+
+
+
+	function load_pic(){
+
+		current_channel_id = 2;
+
+
+
+		var dic = {"timestamp":timestamp(),"page_no":1,"sign_method":"md5","v": "2.0","app_key":12538330,"format":"json"
+		,"method":"taobao.poster.posters.get","page_size":20,"channel_id":current_channel_id};
+
+		dic = sortObject(dic);
+		params = to_query(dic);
+	
+		var poster_url = base_url + params + "&sign=" + hex_md5(to_secret(dic)).toUpperCase();
+
+		$.getJSON(poster_url,function(data){
+
+			if(typeof(data["error_response"])!="undefined")
+			{
+				alert(data["error_response"]["msg"]);
+			}else{
+				parse_data(data);
+			}
+		},"json");
+	}
+
+	function parse_data(data){
+		var posters = data["poster_posters_get_response"]["posters"]["huabao"];
+
+		var templates = "";
+		var dic = {};
+
+		
+		w = getbox();
+		var hfactor = w /3.0/ 180.0;
+
+		var post_list = ["left_box","middle_box","right_box"];
+		for(var i=0;i<6;i++){
+			dic["title"] = posters[i].title_short.substring(0,6);
+			dic["id"] =posters[i].id;
+			if(posters[i].hits==0){dic["hits"] = Math.round(Math.random()*100);}
+			else{dic["hits"] = posters[i].hits;}
+
+			dic["cover_pic_url"] = posters[i].cover_pic_url.split(",")[0];
+			dic["image_height"] = 150 * hfactor;
+			dic["top_class"] = "short_title_top";
+			templates = templ(post_template,dic);
+			$("#"+post_list[i%3]).append(templates);
+		}
+	}
+
+	function load_info(poster_id){
+		//window.location.href='info.html?poster_id='+poster_id;
+		window.info.showInfo(poster_id);
+	}
+
+</script>
+
+
+<style type="text/css" media="all">
+a:link {}
+a:visited {}
+a:hover {}
+
+body,ul,li {
+	padding:10px;
+	margin:0;
+	-webkit-user-select:none;
+    -webkit-text-size-adjust:none;
+	background-image: url(bg.png);
+}
+ul,div,li,img{outline-style:none;}
+
+body {
+	font-size:12px;
+	-webkit-user-select:none;
+    -webkit-text-size-adjust:none;
+	font-family:helvetica;
+}
+
+#wrapper {
+	width:300px;
+	height:160px;
+	overflow:hidden;
+	
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	-o-border-radius:10px;
+	border-radius:10px;
+	
+	margin: 0 auto;
+}
+
+#scroller {
+	width:2100px;
+	height:100%;
+	float:left;
+	padding:0;
+}
+
+#scroller ul {
+	list-style:none;
+	display:block;
+	float:left;
+	width:100%;
+	height:100%;
+	padding:0;
+	margin:0;
+	text-align:left;
+}
+
+#scroller li {
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-o-box-sizing:border-box;
+	box-sizing:border-box;
+	display:block; float:left;
+	width:300px; height:160px;
+	text-align:center;
+	font-size:18px;
+	line-height:140%;
+}
+
+#nav {
+	width:300px;
+	margin: 0 auto;
+
+}
+
+#prev, #next {
+	float:left;
+	font-weight:bold;
+	font-size:14px;
+	padding:5px 0;
+	width:80px;
+}
+
+#next {
+	float:right;
+	text-align:right;
+}
+
+#indicator, #indicator > li {
+	display:block; float:left;
+	list-style:none;
+	padding:0; margin:0;
+}
+
+#indicator {
+	width:110px;
+	padding:12px 0 0 30px;
+}
+img{
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	-o-border-radius:4px;
+	border-radius:4px;
+}
+
+#indicator > li {
+	text-indent:-9999em;
+	width:8px; height:8px;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	-o-border-radius:4px;
+	border-radius:4px;
+	background:#ddd;
+	overflow:hidden;
+	margin-right:4px;
+}
+
+#indicator > li.active {
+	background:#888;
+}
+
+#indicator > li:last-child {
+	margin:0;
+}
+
+
+#left_box,#right_box,#middle_box {
+	width:32%;
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+}
+
+.poster {
+	padding: 0px 2px ;
+	margin: 0px 0px 12px 0px;
+	text-align:center;
+}
+
+#info{
+	position: relative;
+	width:100%;
+	padding:0;
+	margin: 30px auto;
+}
+
+.header_title {font-weight:bold;position:absolute;
+	           text-align:center;
+	           text-shadow:1px 1px 0px #ffffff;
+	           font-size: 14px;
+	           background-color:#FFF;
+	           opacity: 0.5;
+	           width:100%;
+	           -moz-opacity: 0.5;
+	           filter:alpha(opacity=5);
+}
+.long_title_top { top:73%;}
+.short_title_top { top:60%;}
+.div_img {
+    -moz-border-radius:4px 4px 0 0;
+	-webkit-border-radius:4px 4px 0 0;
+	border-radius:4px 4px 0 0;
+	border:2px;
+	border-color: #000;
+}
+
+.down_round{
+	-moz-border-radius:0px 0px 6px 6px;
+	-webkit-border-radius:0px 0px 6px 6px;
+	border-radius:0px 0px 6px 6px;
+	padding: 4px 8px 8px 8px;
+	height: 23px;
+	position: relative;
+	background: #FFFFFF;
+	border-bottom: 1px solid #ececec;
+}
+
+
+.favaImg {
+	background: url(fav_icon_word_new_1220.png) 0 -23px no-repeat;
+	height: 20px;
+	width: 48px;
+	float: left;
+	display: block;
+	overflow: hidden;
+	margin-top: 4px;
+}
+
+.favCount {
+	line-height: 23px;
+	height: 23px;
+	width: auto;
+	float: left;
+	margin-left: 2px;
+	/*background: url(fav_icon_word_new_1220.png) -60px 0 no-repeat;*/
+	color: #FF579A;
+	padding-left: 2px;
+	font-size: 14px;
+	font-weight: bold;
+	margin-top: 4px;
+}
+
+.left{float:left ;margin: 4px 10px 10px 0px;}
+.right{float:right}
+.clear{clear:both}
+
+</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="scroller">
+			<ul id="thelist">
+				<li><img src="caro/1.jpg" width="280px"></li>
+				<li><img src="caro/2.jpg" width="280px"></li>
+				<li><img src="caro/3.jpg" width="280px"></li>
+			</ul>
+		</div>
+</div>
+<div id="nav">
+	<ul id="indicator">
+		<li class="active">1</li>
+		<li>2</li>
+		<li>3</li>
+	</ul>
+</div>
+
+<div id="info">
+	<div id="left_box" class="left">
+	</div>
+	<div id="middle_box" class="left">
+	</div>
+	<div id="right_box" class="left">
+	</div>
+</div>
+
+	
+</body>
+</html>
